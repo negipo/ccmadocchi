@@ -2,3 +2,5 @@ tmp/
 .superpowers/
 __pycache__/
 *.pyc
+*.egg-info/
+.venv/

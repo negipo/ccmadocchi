@@ -6,7 +6,6 @@ from ccmadocchi.serial_comm import find_serial_port, send_command
 class TestSendCommand:
     @patch("ccmadocchi.serial_comm.serial.Serial")
     def test_send_wave_command(self, mock_serial_class):
-        """ウェーブコマンドをシリアルポートに送信できる"""
         mock_serial = MagicMock()
         mock_serial_class.return_value.__enter__ = MagicMock(return_value=mock_serial)
         mock_serial_class.return_value.__exit__ = MagicMock(return_value=False)
@@ -20,7 +19,6 @@ class TestSendCommand:
 class TestFindSerialPort:
     @patch("ccmadocchi.serial_comm.serial.tools.list_ports.comports")
     def test_find_port_returns_first_match(self, mock_comports):
-        """usbmodemを含むデバイスが存在するとき、そのデバイスパスを返す"""
         mock_port = MagicMock()
         mock_port.device = "/dev/cu.usbmodem1234"
         mock_port.description = "Maker Nano"
@@ -32,7 +30,6 @@ class TestFindSerialPort:
 
     @patch("ccmadocchi.serial_comm.serial.tools.list_ports.comports")
     def test_find_port_returns_none_when_empty(self, mock_comports):
-        """ポートが存在しないとき、Noneを返す"""
         mock_comports.return_value = []
 
         result = find_serial_port()
