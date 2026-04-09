@@ -25,7 +25,9 @@ uv tool install .
 ## 使い方
 
 ```
-ccmadocchi wave
+ccmadocchi wave              # 興奮した手振り（2〜4回ランダム）
+ccmadocchi love              # 親愛の挨拶（ゆっくり上げて戻す）
+ccmadocchi sad               # 悲しみの表現（少し上げてしばらく待つ）
 ```
 
 ポートを明示的に指定する場合:
