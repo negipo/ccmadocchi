@@ -12,8 +12,9 @@ class TestSendCommand:
 
         send_command("/dev/ttyUSB0", "w")
 
-        mock_serial_class.assert_called_once_with("/dev/ttyUSB0", 9600, timeout=2)
+        mock_serial_class.assert_called_once_with("/dev/ttyUSB0", 9600, timeout=10)
         mock_serial.write.assert_called_once_with(b"w")
+        mock_serial.read.assert_called_once_with(1)
 
 
 class TestFindSerialPort:
