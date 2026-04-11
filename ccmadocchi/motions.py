@@ -16,7 +16,7 @@ def wave() -> str:
 
 def love() -> str:
     angle = max(0, REST_ANGLE - random.randint(40, 50))
-    hold = random.randint(800, 1200)
+    hold = random.randint(400, 600)
     return f"{angle},{hold}"
 
 

@@ -62,7 +62,7 @@ class TestLove:
             steps = _parse_steps(love())
             angle, hold = steps[0]
             assert 0 <= angle <= 180
-            assert 800 <= hold <= 1200
+            assert 400 <= hold <= 600
 
 
 class TestSad:
