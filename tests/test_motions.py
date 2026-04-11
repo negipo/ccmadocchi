@@ -3,7 +3,7 @@ from unittest.mock import patch
 
 import pytest
 
-from ccmadocchi.motions import love, sad, wave
+from ccmadocchi.motions import love, sad, wave, yo
 
 STEP_PATTERN = re.compile(r"^\d{1,3},\d+$")
 REST_ANGLE = 180
@@ -14,6 +14,21 @@ def _parse_steps(command: str) -> list[tuple[int, int]]:
         (int(p.split(",")[0]), int(p.split(",")[1]))
         for p in command.split(";")
     ]
+
+
+class TestYo:
+    @patch("ccmadocchi.motions.random.randint")
+    def test_yo_generates_one_round_trip(self, mock_randint):
+        mock_randint.side_effect = [35, 200]
+        result = yo()
+        steps = _parse_steps(result)
+        assert len(steps) == 2
+        assert steps[0] == (145, 200)
+        assert steps[1] == (180, 200)
+
+    def test_yo_rejects_out_of_range_angle(self):
+        with pytest.raises(ValueError):
+            yo(angle=50)
 
 
 class TestWave:

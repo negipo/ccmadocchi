@@ -2,9 +2,11 @@ import random
 
 REST_ANGLE = 180
 
-WAVE_ANGLE_RANGE = (30, 45)
+YO_ANGLE_RANGE = (30, 45)
+YO_HOLD_RANGE = (100, 300)
+WAVE_ANGLE_RANGE = YO_ANGLE_RANGE
 WAVE_COUNT_RANGE = (2, 4)
-WAVE_HOLD_RANGE = (100, 300)
+WAVE_HOLD_RANGE = YO_HOLD_RANGE
 LOVE_ANGLE_RANGE = (60, 75)
 LOVE_HOLD_RANGE = (600, 900)
 SAD_ANGLE_RANGE = (10, 18)
@@ -14,6 +16,18 @@ SAD_HOLD_RANGE = (1500, 2500)
 def _validate_range(value: int, min_val: int, max_val: int, name: str) -> None:
     if not (min_val <= value <= max_val):
         raise ValueError(f"{name}は{min_val}-{max_val}の範囲で指定してください: {value}")
+
+
+def yo(angle: int | None = None, hold: int | None = None) -> str:
+    if angle is None:
+        angle = random.randint(*YO_ANGLE_RANGE)
+    else:
+        _validate_range(angle, *YO_ANGLE_RANGE, "angle")
+    if hold is None:
+        hold = random.randint(*YO_HOLD_RANGE)
+    else:
+        _validate_range(hold, *YO_HOLD_RANGE, "hold")
+    return f"{REST_ANGLE - angle},{hold};{REST_ANGLE},{hold}"
 
 
 def wave(angle: int | None = None, count: int | None = None, hold: int | None = None) -> str:
