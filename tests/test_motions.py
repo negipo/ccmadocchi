@@ -4,7 +4,7 @@ from unittest.mock import patch
 from ccmadocchi.motions import love, sad, wave
 
 STEP_PATTERN = re.compile(r"^\d{1,3},\d+$")
-REST_ANGLE = 45
+REST_ANGLE = 180
 
 
 def _parse_steps(command: str) -> list[tuple[int, int]]:
@@ -21,12 +21,12 @@ class TestWave:
         result = wave()
         steps = _parse_steps(result)
         assert len(steps) == 6
-        assert steps[0] == (30, 200)
-        assert steps[1] == (45, 200)
-        assert steps[2] == (30, 200)
-        assert steps[3] == (45, 200)
-        assert steps[4] == (30, 200)
-        assert steps[5] == (45, 200)
+        assert steps[0] == (165, 200)
+        assert steps[1] == (180, 200)
+        assert steps[2] == (165, 200)
+        assert steps[3] == (180, 200)
+        assert steps[4] == (165, 200)
+        assert steps[5] == (180, 200)
 
     def test_wave_uses_consistent_angle_and_hold(self):
         for _ in range(50):
@@ -51,18 +51,18 @@ class TestWave:
 class TestLove:
     @patch("ccmadocchi.motions.random.randint")
     def test_love_generates_single_step(self, mock_randint):
-        mock_randint.side_effect = [45, 1000]
+        mock_randint.side_effect = [65, 800]
         result = love()
         steps = _parse_steps(result)
         assert len(steps) == 1
-        assert steps[0] == (0, 1000)
+        assert steps[0] == (115, 800)
 
     def test_love_angle_in_range(self):
         for _ in range(50):
             steps = _parse_steps(love())
             angle, hold = steps[0]
             assert 0 <= angle <= 180
-            assert 400 <= hold <= 600
+            assert 600 <= hold <= 900
 
 
 class TestSad:
@@ -72,7 +72,7 @@ class TestSad:
         result = sad()
         steps = _parse_steps(result)
         assert len(steps) == 1
-        assert steps[0] == (35, 2000)
+        assert steps[0] == (170, 2000)
 
     def test_sad_angle_in_range(self):
         for _ in range(50):

@@ -1,11 +1,11 @@
 import random
 
-REST_ANGLE = 45
+REST_ANGLE = 180
 
 
 def wave() -> str:
     count = random.randint(2, 4)
-    angle = REST_ANGLE - random.randint(10, 20)
+    angle = REST_ANGLE - random.randint(15, 30)
     hold = random.randint(100, 300)
     steps = []
     for _ in range(count):
@@ -15,12 +15,12 @@ def wave() -> str:
 
 
 def love() -> str:
-    angle = max(0, REST_ANGLE - random.randint(40, 50))
-    hold = random.randint(400, 600)
+    angle = REST_ANGLE - random.randint(60, 75)
+    hold = random.randint(600, 900)
     return f"{angle},{hold}"
 
 
 def sad() -> str:
-    angle = REST_ANGLE - random.randint(7, 12)
+    angle = REST_ANGLE - random.randint(10, 18)
     hold = random.randint(1500, 2500)
     return f"{angle},{hold}"

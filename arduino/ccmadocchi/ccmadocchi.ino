@@ -2,7 +2,7 @@
 
 Servo servo;
 const int SERVO_PIN = 9;
-const int REST_ANGLE = 45;
+const int REST_ANGLE = 180;
 
 void setup() {
     servo.attach(SERVO_PIN);

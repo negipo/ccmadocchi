@@ -15,6 +15,8 @@ uv tool install --force --reinstall ccmadocchi --from .
 
 ### Arduinoコード(ino)を変更した場合
 
+REST_ANGLEを変更する場合は、書き込み前にユーザにアームを外すよう指示すること。書き込み直後にサーボがREST_ANGLEの位置に移動するため、アームが付いたままだと破損の恐れがある。
+
 ```bash
 arduino-cli compile --fqbn arduino:avr:nano arduino/ccmadocchi
 arduino-cli upload --fqbn arduino:avr:nano --port /dev/cu.usbmodem201912341 arduino/ccmadocchi
