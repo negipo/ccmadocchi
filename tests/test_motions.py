@@ -17,16 +17,7 @@ def _parse_steps(command: str) -> list[tuple[int, int]]:
 class TestWave:
     @patch("ccmadocchi.motions.random.randint")
     def test_wave_generates_oscillation_steps(self, mock_randint):
-        """振動ステップ列を正しく生成する"""
-        mock_randint.side_effect = [
-            3,    # count
-            15,   # angle offset 1
-            200,  # hold 1
-            10,   # angle offset 2
-            150,  # hold 2
-            20,   # angle offset 3
-            250,  # hold 3
-        ]
+        mock_randint.side_effect = [3, 15, 200, 10, 150, 20, 250]
         result = wave()
         steps = _parse_steps(result)
         assert len(steps) == 6
@@ -38,13 +29,11 @@ class TestWave:
         assert steps[5] == (45, 250)
 
     def test_wave_format_is_valid(self):
-        """出力フォーマットが angle,hold 形式に準拠している"""
         result = wave()
         for step in result.split(";"):
             assert STEP_PATTERN.match(step), f"invalid step format: {step}"
 
     def test_wave_angles_in_range(self):
-        """角度が 0〜180 の範囲内に収まっている"""
         for _ in range(50):
             steps = _parse_steps(wave())
             for angle, hold in steps:
@@ -54,7 +43,6 @@ class TestWave:
 class TestLove:
     @patch("ccmadocchi.motions.random.randint")
     def test_love_generates_single_step(self, mock_randint):
-        """ランダム値から単一ステップを生成する"""
         mock_randint.side_effect = [45, 1000]
         result = love()
         steps = _parse_steps(result)
@@ -62,7 +50,6 @@ class TestLove:
         assert steps[0] == (0, 1000)
 
     def test_love_angle_in_range(self):
-        """角度と保持時間が期待範囲内に収まっている"""
         for _ in range(50):
             steps = _parse_steps(love())
             angle, hold = steps[0]
@@ -73,7 +60,6 @@ class TestLove:
 class TestSad:
     @patch("ccmadocchi.motions.random.randint")
     def test_sad_generates_single_step(self, mock_randint):
-        """ランダム値から単一ステップを生成する"""
         mock_randint.side_effect = [10, 2000]
         result = sad()
         steps = _parse_steps(result)
@@ -81,7 +67,6 @@ class TestSad:
         assert steps[0] == (35, 2000)
 
     def test_sad_angle_in_range(self):
-        """角度と保持時間が期待範囲内に収まっている"""
         for _ in range(50):
             steps = _parse_steps(sad())
             angle, hold = steps[0]
