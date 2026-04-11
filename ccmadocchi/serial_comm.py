@@ -15,5 +15,5 @@ def find_serial_port() -> str | None:
 def send_command(port: str, command: str) -> None:
     with serial.Serial(port, 9600, timeout=10) as ser:
         time.sleep(2)
-        ser.write(command.encode())
+        ser.write(f"{command}\n".encode())
         ser.read(1)

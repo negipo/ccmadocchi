@@ -5,15 +5,15 @@ from ccmadocchi.serial_comm import find_serial_port, send_command
 
 class TestSendCommand:
     @patch("ccmadocchi.serial_comm.serial.Serial")
-    def test_send_wave_command(self, mock_serial_class):
+    def test_send_command_appends_newline(self, mock_serial_class):
         mock_serial = MagicMock()
         mock_serial_class.return_value.__enter__ = MagicMock(return_value=mock_serial)
         mock_serial_class.return_value.__exit__ = MagicMock(return_value=False)
 
-        send_command("/dev/ttyUSB0", "w")
+        send_command("/dev/ttyUSB0", "30,200;45,200")
 
         mock_serial_class.assert_called_once_with("/dev/ttyUSB0", 9600, timeout=10)
-        mock_serial.write.assert_called_once_with(b"w")
+        mock_serial.write.assert_called_once_with(b"30,200;45,200\n")
         mock_serial.read.assert_called_once_with(1)
 
 
