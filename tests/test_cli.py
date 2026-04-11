@@ -14,7 +14,7 @@ class TestWaveCommand:
         result = runner.invoke(main, ["wave"])
 
         assert result.exit_code == 0
-        mock_motion.assert_called_once_with(angle=None, count=None)
+        mock_motion.assert_called_once_with(angle=None, count=None, hold=None)
         mock_send.assert_called_once_with("/dev/cu.usbmodem1234", "30,200;45,200")
 
     @patch("ccmadocchi.cli.find_serial_port", return_value=None)
@@ -42,7 +42,7 @@ class TestWaveCommand:
         result = runner.invoke(main, ["wave", "--angle", "40", "--count", "2"])
 
         assert result.exit_code == 0
-        mock_motion.assert_called_once_with(angle=40, count=2)
+        mock_motion.assert_called_once_with(angle=40, count=2, hold=None)
 
     @patch("ccmadocchi.cli.find_serial_port", return_value="/dev/cu.usbmodem1234")
     def test_wave_fails_with_out_of_range_angle(self, mock_find):
@@ -61,7 +61,7 @@ class TestLoveCommand:
         result = runner.invoke(main, ["love"])
 
         assert result.exit_code == 0
-        mock_motion.assert_called_once_with(angle=None)
+        mock_motion.assert_called_once_with(angle=None, hold=None)
         mock_send.assert_called_once_with("/dev/cu.usbmodem1234", "0,1000")
 
     @patch("ccmadocchi.cli.find_serial_port", return_value=None)
@@ -82,7 +82,7 @@ class TestSadCommand:
         result = runner.invoke(main, ["sad"])
 
         assert result.exit_code == 0
-        mock_motion.assert_called_once_with(angle=None)
+        mock_motion.assert_called_once_with(angle=None, hold=None)
         mock_send.assert_called_once_with("/dev/cu.usbmodem1234", "35,2000")
 
     @patch("ccmadocchi.cli.find_serial_port", return_value=None)
