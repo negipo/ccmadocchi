@@ -17,16 +17,24 @@ def _parse_steps(command: str) -> list[tuple[int, int]]:
 class TestWave:
     @patch("ccmadocchi.motions.random.randint")
     def test_wave_generates_oscillation_steps(self, mock_randint):
-        mock_randint.side_effect = [3, 15, 200, 10, 150, 20, 250]
+        mock_randint.side_effect = [3, 15, 200]
         result = wave()
         steps = _parse_steps(result)
         assert len(steps) == 6
         assert steps[0] == (30, 200)
         assert steps[1] == (45, 200)
-        assert steps[2] == (35, 150)
-        assert steps[3] == (45, 150)
-        assert steps[4] == (25, 250)
-        assert steps[5] == (45, 250)
+        assert steps[2] == (30, 200)
+        assert steps[3] == (45, 200)
+        assert steps[4] == (30, 200)
+        assert steps[5] == (45, 200)
+
+    def test_wave_uses_consistent_angle_and_hold(self):
+        for _ in range(50):
+            steps = _parse_steps(wave())
+            angles = [s[0] for s in steps[::2]]
+            holds = [s[1] for s in steps]
+            assert len(set(angles)) == 1
+            assert len(set(holds)) == 1
 
     def test_wave_format_is_valid(self):
         result = wave()

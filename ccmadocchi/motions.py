@@ -4,11 +4,11 @@ REST_ANGLE = 45
 
 
 def wave() -> str:
-    steps = []
     count = random.randint(2, 4)
+    angle = REST_ANGLE - random.randint(10, 20)
+    hold = random.randint(100, 300)
+    steps = []
     for _ in range(count):
-        angle = REST_ANGLE - random.randint(10, 20)
-        hold = random.randint(100, 300)
         steps.append(f"{angle},{hold}")
         steps.append(f"{REST_ANGLE},{hold}")
     return ";".join(steps)
