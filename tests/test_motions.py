@@ -1,6 +1,8 @@
 import re
 from unittest.mock import patch
 
+import pytest
+
 from ccmadocchi.motions import love, sad, wave
 
 STEP_PATTERN = re.compile(r"^\d{1,3},\d+$")
@@ -17,15 +19,15 @@ def _parse_steps(command: str) -> list[tuple[int, int]]:
 class TestWave:
     @patch("ccmadocchi.motions.random.randint")
     def test_wave_generates_oscillation_steps(self, mock_randint):
-        mock_randint.side_effect = [3, 15, 200]
+        mock_randint.side_effect = [3, 35, 200]
         result = wave()
         steps = _parse_steps(result)
         assert len(steps) == 6
-        assert steps[0] == (165, 200)
+        assert steps[0] == (145, 200)
         assert steps[1] == (180, 200)
-        assert steps[2] == (165, 200)
+        assert steps[2] == (145, 200)
         assert steps[3] == (180, 200)
-        assert steps[4] == (165, 200)
+        assert steps[4] == (145, 200)
         assert steps[5] == (180, 200)
 
     def test_wave_uses_consistent_angle_and_hold(self):
@@ -47,6 +49,23 @@ class TestWave:
             for angle, hold in steps:
                 assert 0 <= angle <= 180
 
+    @patch("ccmadocchi.motions.random.randint")
+    def test_wave_with_fixed_params(self, mock_randint):
+        mock_randint.return_value = 200
+        result = wave(angle=40, count=2)
+        steps = _parse_steps(result)
+        assert len(steps) == 4
+        assert steps[0] == (140, 200)
+        assert steps[1] == (180, 200)
+
+    def test_wave_rejects_out_of_range_angle(self):
+        with pytest.raises(ValueError):
+            wave(angle=50)
+
+    def test_wave_rejects_out_of_range_count(self):
+        with pytest.raises(ValueError):
+            wave(count=10)
+
 
 class TestLove:
     @patch("ccmadocchi.motions.random.randint")
@@ -64,6 +83,10 @@ class TestLove:
             assert 0 <= angle <= 180
             assert 600 <= hold <= 900
 
+    def test_love_rejects_out_of_range_angle(self):
+        with pytest.raises(ValueError):
+            love(angle=80)
+
 
 class TestSad:
     @patch("ccmadocchi.motions.random.randint")
@@ -80,3 +103,7 @@ class TestSad:
             angle, hold = steps[0]
             assert 0 <= angle <= 180
             assert 1500 <= hold <= 2500
+
+    def test_sad_rejects_out_of_range_angle(self):
+        with pytest.raises(ValueError):
+            sad(angle=20)

@@ -21,23 +21,36 @@ def _get_port(port):
 
 @main.command()
 @click.option("--port", default=None, help="シリアルポートのパス")
-def wave(port):
+@click.option("--angle", default=None, type=int, help="角度オフセット(30-45)")
+@click.option("--count", default=None, type=int, help="繰り返し回数(2-4)")
+def wave(port, angle, count):
     port = _get_port(port)
-    send_command(port, wave_motion())
+    try:
+        send_command(port, wave_motion(angle=angle, count=count))
+    except ValueError as e:
+        raise click.ClickException(str(e))
     click.echo(f"wave送信: {port}")
 
 
 @main.command()
 @click.option("--port", default=None, help="シリアルポートのパス")
-def love(port):
+@click.option("--angle", default=None, type=int, help="角度オフセット(60-75)")
+def love(port, angle):
     port = _get_port(port)
-    send_command(port, love_motion())
+    try:
+        send_command(port, love_motion(angle=angle))
+    except ValueError as e:
+        raise click.ClickException(str(e))
     click.echo(f"love送信: {port}")
 
 
 @main.command()
 @click.option("--port", default=None, help="シリアルポートのパス")
-def sad(port):
+@click.option("--angle", default=None, type=int, help="角度オフセット(10-18)")
+def sad(port, angle):
     port = _get_port(port)
-    send_command(port, sad_motion())
+    try:
+        send_command(port, sad_motion(angle=angle))
+    except ValueError as e:
+        raise click.ClickException(str(e))
     click.echo(f"sad送信: {port}")

@@ -14,7 +14,7 @@ class TestWaveCommand:
         result = runner.invoke(main, ["wave"])
 
         assert result.exit_code == 0
-        mock_motion.assert_called_once()
+        mock_motion.assert_called_once_with(angle=None, count=None)
         mock_send.assert_called_once_with("/dev/cu.usbmodem1234", "30,200;45,200")
 
     @patch("ccmadocchi.cli.find_serial_port", return_value=None)
@@ -34,6 +34,23 @@ class TestWaveCommand:
         assert result.exit_code == 0
         mock_send.assert_called_once_with("/dev/ttyUSB0", "30,200;45,200")
 
+    @patch("ccmadocchi.cli.send_command")
+    @patch("ccmadocchi.cli.wave_motion", return_value="140,200;180,200")
+    @patch("ccmadocchi.cli.find_serial_port", return_value="/dev/cu.usbmodem1234")
+    def test_wave_with_angle_and_count(self, mock_find, mock_motion, mock_send):
+        runner = CliRunner()
+        result = runner.invoke(main, ["wave", "--angle", "40", "--count", "2"])
+
+        assert result.exit_code == 0
+        mock_motion.assert_called_once_with(angle=40, count=2)
+
+    @patch("ccmadocchi.cli.find_serial_port", return_value="/dev/cu.usbmodem1234")
+    def test_wave_fails_with_out_of_range_angle(self, mock_find):
+        runner = CliRunner()
+        result = runner.invoke(main, ["wave", "--angle", "100"])
+
+        assert result.exit_code != 0
+
 
 class TestLoveCommand:
     @patch("ccmadocchi.cli.send_command")
@@ -44,7 +61,7 @@ class TestLoveCommand:
         result = runner.invoke(main, ["love"])
 
         assert result.exit_code == 0
-        mock_motion.assert_called_once()
+        mock_motion.assert_called_once_with(angle=None)
         mock_send.assert_called_once_with("/dev/cu.usbmodem1234", "0,1000")
 
     @patch("ccmadocchi.cli.find_serial_port", return_value=None)
@@ -65,7 +82,7 @@ class TestSadCommand:
         result = runner.invoke(main, ["sad"])
 
         assert result.exit_code == 0
-        mock_motion.assert_called_once()
+        mock_motion.assert_called_once_with(angle=None)
         mock_send.assert_called_once_with("/dev/cu.usbmodem1234", "35,2000")
 
     @patch("ccmadocchi.cli.find_serial_port", return_value=None)
