@@ -2,12 +2,19 @@
 
 Servo servo;
 const int SERVO_PIN = 9;
+const int BUZZER_PIN = 8;
 const int REST_ANGLE = 180;
 
 void setup() {
+    Serial.begin(9600);
+}
+
+void initServo() {
+    noInterrupts();
     servo.attach(SERVO_PIN);
     servo.write(REST_ANGLE);
-    Serial.begin(9600);
+    interrupts();
+    delay(200);
 }
 
 void executeSteps(String command) {
@@ -34,6 +41,15 @@ void loop() {
         String command = Serial.readStringUntil('\n');
         command.trim();
         if (command.length() > 0) {
+            if (!servo.attached()) {
+                initServo();
+            }
+            if (command.startsWith("D:")) {
+                tone(BUZZER_PIN, 2000, 100);
+                delay(150);
+                noTone(BUZZER_PIN);
+                command = command.substring(2);
+            }
             executeSteps(command);
             Serial.write('k');
         }

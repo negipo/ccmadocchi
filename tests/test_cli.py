@@ -15,7 +15,7 @@ class TestYoCommand:
 
         assert result.exit_code == 0
         mock_motion.assert_called_once_with(angle=None, hold=None)
-        mock_send.assert_called_once_with("/dev/cu.usbmodem1234", "145,200;180,200")
+        mock_send.assert_called_once_with("/dev/cu.usbmodem1234", "145,200;180,200", debug=False)
         assert "yo送信" in result.output
 
     @patch("ccmadocchi.cli.send_command")
@@ -39,7 +39,7 @@ class TestWaveCommand:
 
         assert result.exit_code == 0
         mock_motion.assert_called_once_with(angle=None, count=None, hold=None)
-        mock_send.assert_called_once_with("/dev/cu.usbmodem1234", "145,200;180,200")
+        mock_send.assert_called_once_with("/dev/cu.usbmodem1234", "145,200;180,200", debug=False)
 
     @patch("ccmadocchi.cli.find_serial_port", return_value=None)
     def test_wave_fails_when_no_device(self, mock_find):
@@ -56,7 +56,7 @@ class TestWaveCommand:
         result = runner.invoke(main, ["wave", "--port", "/dev/ttyUSB0"])
 
         assert result.exit_code == 0
-        mock_send.assert_called_once_with("/dev/ttyUSB0", "145,200;180,200")
+        mock_send.assert_called_once_with("/dev/ttyUSB0", "145,200;180,200", debug=False)
 
     @patch("ccmadocchi.cli.send_command")
     @patch("ccmadocchi.cli.wave_motion", return_value="140,200;180,200")
@@ -86,7 +86,7 @@ class TestLoveCommand:
 
         assert result.exit_code == 0
         mock_motion.assert_called_once_with(angle=None, hold=None)
-        mock_send.assert_called_once_with("/dev/cu.usbmodem1234", "115,800")
+        mock_send.assert_called_once_with("/dev/cu.usbmodem1234", "115,800", debug=False)
 
     @patch("ccmadocchi.cli.find_serial_port", return_value=None)
     def test_love_fails_when_no_device(self, mock_find):
@@ -107,7 +107,7 @@ class TestSadCommand:
 
         assert result.exit_code == 0
         mock_motion.assert_called_once_with(angle=None, hold=None)
-        mock_send.assert_called_once_with("/dev/cu.usbmodem1234", "170,2000")
+        mock_send.assert_called_once_with("/dev/cu.usbmodem1234", "170,2000", debug=False)
 
     @patch("ccmadocchi.cli.find_serial_port", return_value=None)
     def test_sad_fails_when_no_device(self, mock_find):

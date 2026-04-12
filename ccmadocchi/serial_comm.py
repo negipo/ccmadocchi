@@ -12,8 +12,9 @@ def find_serial_port() -> str | None:
     return None
 
 
-def send_command(port: str, command: str) -> None:
+def send_command(port: str, command: str, *, debug: bool = False) -> None:
     with serial.Serial(port, 9600, timeout=10) as ser:
         time.sleep(2)
-        ser.write(f"{command}\n".encode())
+        payload = f"D:{command}" if debug else command
+        ser.write(f"{payload}\n".encode())
         ser.read(1)
