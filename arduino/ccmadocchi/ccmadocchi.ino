@@ -34,6 +34,8 @@ void executeSteps(String command) {
         start = semicolon + 1;
     }
     servo.write(REST_ANGLE);
+    delay(400);
+    servo.detach();
 }
 
 void loop() {
