@@ -12,16 +12,18 @@ def main():
     pass
 
 
-def _get_port(port: str | None) -> str:
+def _get_port(port: str | None) -> str | None:
     if port is None:
         port = find_serial_port()
-        if port is None:
-            raise click.ClickException("デバイスが見つかりません")
     return port
 
 
 def _run_motion(port: str | None, command: str, name: str, *, silent: bool, debug: bool = False) -> None:
     port = _get_port(port)
+    if port is None:
+        if not silent:
+            click.echo("デバイスが見つかりません")
+        return
     send_command(port, command, debug=debug)
     if not silent:
         click.echo(f"{name}送信: {port}")

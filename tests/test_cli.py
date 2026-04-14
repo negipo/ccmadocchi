@@ -42,12 +42,20 @@ class TestWaveCommand:
         mock_send.assert_called_once_with("/dev/cu.usbmodem1234", "145,200;180,200", debug=False)
 
     @patch("ccmadocchi.cli.find_serial_port", return_value=None)
-    def test_wave_fails_when_no_device(self, mock_find):
+    def test_wave_exits_gracefully_when_no_device(self, mock_find):
         runner = CliRunner()
         result = runner.invoke(main, ["wave"])
 
-        assert result.exit_code != 0
+        assert result.exit_code == 0
         assert "見つかりません" in result.output
+
+    @patch("ccmadocchi.cli.find_serial_port", return_value=None)
+    def test_wave_silent_no_output_when_no_device(self, mock_find):
+        runner = CliRunner()
+        result = runner.invoke(main, ["wave", "--silent"])
+
+        assert result.exit_code == 0
+        assert result.output == ""
 
     @patch("ccmadocchi.cli.send_command")
     @patch("ccmadocchi.cli.wave_motion", return_value="145,200;180,200")
@@ -89,11 +97,11 @@ class TestLoveCommand:
         mock_send.assert_called_once_with("/dev/cu.usbmodem1234", "115,800", debug=False)
 
     @patch("ccmadocchi.cli.find_serial_port", return_value=None)
-    def test_love_fails_when_no_device(self, mock_find):
+    def test_love_exits_gracefully_when_no_device(self, mock_find):
         runner = CliRunner()
         result = runner.invoke(main, ["love"])
 
-        assert result.exit_code != 0
+        assert result.exit_code == 0
         assert "見つかりません" in result.output
 
 
@@ -110,9 +118,9 @@ class TestSadCommand:
         mock_send.assert_called_once_with("/dev/cu.usbmodem1234", "170,2000", debug=False)
 
     @patch("ccmadocchi.cli.find_serial_port", return_value=None)
-    def test_sad_fails_when_no_device(self, mock_find):
+    def test_sad_exits_gracefully_when_no_device(self, mock_find):
         runner = CliRunner()
         result = runner.invoke(main, ["sad"])
 
-        assert result.exit_code != 0
+        assert result.exit_code == 0
         assert "見つかりません" in result.output
