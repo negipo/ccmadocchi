@@ -83,6 +83,33 @@ class TestWaveCommand:
 
         assert result.exit_code != 0
 
+    @patch("ccmadocchi.cli.find_serial_port", return_value="/dev/cu.usbmodem1234")
+    def test_wave_silent_suppresses_value_error(self, mock_find):
+        runner = CliRunner()
+        result = runner.invoke(main, ["wave", "--angle", "100", "--silent"])
+
+        assert result.exit_code == 0
+        assert result.output == ""
+
+    @patch("ccmadocchi.cli.send_command", side_effect=RuntimeError("boom"))
+    @patch("ccmadocchi.cli.wave_motion", return_value="145,200;180,200")
+    @patch("ccmadocchi.cli.find_serial_port", return_value="/dev/cu.usbmodem1234")
+    def test_wave_silent_suppresses_send_error(self, mock_find, mock_motion, mock_send):
+        runner = CliRunner()
+        result = runner.invoke(main, ["wave", "--silent"])
+
+        assert result.exit_code == 0
+        assert result.output == ""
+
+    @patch("ccmadocchi.cli.send_command", side_effect=RuntimeError("boom"))
+    @patch("ccmadocchi.cli.wave_motion", return_value="145,200;180,200")
+    @patch("ccmadocchi.cli.find_serial_port", return_value="/dev/cu.usbmodem1234")
+    def test_wave_raises_send_error_without_silent(self, mock_find, mock_motion, mock_send):
+        runner = CliRunner()
+        result = runner.invoke(main, ["wave"])
+
+        assert result.exit_code != 0
+
 
 class TestLoveCommand:
     @patch("ccmadocchi.cli.send_command")

@@ -1,3 +1,5 @@
+from collections.abc import Callable
+
 import click
 
 from ccmadocchi.motions import love as love_motion
@@ -29,6 +31,19 @@ def _run_motion(port: str | None, command: str, name: str, *, silent: bool, debu
         click.echo(f"{name}送信: {port}")
 
 
+def _run_silent(silent: bool, action: Callable[[], None]) -> None:
+    try:
+        action()
+    except ValueError as e:
+        if silent:
+            return
+        raise click.ClickException(str(e)) from e
+    except Exception:
+        if silent:
+            return
+        raise
+
+
 @main.command()
 @click.option("--port", default=None, help="シリアルポートのパス")
 @click.option("--silent", is_flag=True, help="出力を抑制する")
@@ -36,10 +51,7 @@ def _run_motion(port: str | None, command: str, name: str, *, silent: bool, debu
 @click.option("--angle", default=None, type=int, help="角度オフセット(30-45)")
 @click.option("--hold", default=None, type=int, help="保持時間ms(100-300)")
 def yo(port, silent, debug, angle, hold):
-    try:
-        _run_motion(port, yo_motion(angle=angle, hold=hold), "yo", silent=silent, debug=debug)
-    except ValueError as e:
-        raise click.ClickException(str(e))
+    _run_silent(silent, lambda: _run_motion(port, yo_motion(angle=angle, hold=hold), "yo", silent=silent, debug=debug))
 
 
 @main.command()
@@ -50,10 +62,10 @@ def yo(port, silent, debug, angle, hold):
 @click.option("--count", default=None, type=int, help="繰り返し回数(2-4)")
 @click.option("--hold", default=None, type=int, help="保持時間ms(100-300)")
 def wave(port, silent, debug, angle, count, hold):
-    try:
-        _run_motion(port, wave_motion(angle=angle, count=count, hold=hold), "wave", silent=silent, debug=debug)
-    except ValueError as e:
-        raise click.ClickException(str(e))
+    _run_silent(
+        silent,
+        lambda: _run_motion(port, wave_motion(angle=angle, count=count, hold=hold), "wave", silent=silent, debug=debug),
+    )
 
 
 @main.command()
@@ -63,10 +75,9 @@ def wave(port, silent, debug, angle, count, hold):
 @click.option("--angle", default=None, type=int, help="角度オフセット(60-75)")
 @click.option("--hold", default=None, type=int, help="保持時間ms(600-900)")
 def love(port, silent, debug, angle, hold):
-    try:
-        _run_motion(port, love_motion(angle=angle, hold=hold), "love", silent=silent, debug=debug)
-    except ValueError as e:
-        raise click.ClickException(str(e))
+    _run_silent(
+        silent, lambda: _run_motion(port, love_motion(angle=angle, hold=hold), "love", silent=silent, debug=debug)
+    )
 
 
 @main.command()
@@ -76,7 +87,6 @@ def love(port, silent, debug, angle, hold):
 @click.option("--angle", default=None, type=int, help="角度オフセット(10-18)")
 @click.option("--hold", default=None, type=int, help="保持時間ms(1500-2500)")
 def sad(port, silent, debug, angle, hold):
-    try:
-        _run_motion(port, sad_motion(angle=angle, hold=hold), "sad", silent=silent, debug=debug)
-    except ValueError as e:
-        raise click.ClickException(str(e))
+    _run_silent(
+        silent, lambda: _run_motion(port, sad_motion(angle=angle, hold=hold), "sad", silent=silent, debug=debug)
+    )
