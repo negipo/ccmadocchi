@@ -1,5 +1,7 @@
 # ccmadocchi
 
+![ccmadocchi demo](docs/ccmadocchi.gif)
+
 Claude Codeのタスク完了時に、USB経由でぬいぐるみの腕をサーボモーターで動かすCLIツール。
 
 ## アーキテクチャ
